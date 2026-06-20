@@ -107,6 +107,3 @@ const adSelectors = [
 
 MIT License
 
-## 지원
-
-문제가 발생하면 GitHub Issues에 보고해주세요.
