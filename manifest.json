@@ -6,7 +6,8 @@
   "permissions": [
     "storage",
     "scripting",
-    "declarativeNetRequest"
+    "declarativeNetRequest",
+    "webRequest"
   ],
   "host_permissions": [
     "<all_urls>"
