@@ -4,10 +4,9 @@
   "version": "1.0.0",
   "description": "간단하고 효율적인 광고 차단 확장프로그램",
   "permissions": [
-    "webRequest",
-    "tabs",
     "storage",
-    "scripting"
+    "scripting",
+    "declarativeNetRequest"
   ],
   "host_permissions": [
     "<all_urls>"
