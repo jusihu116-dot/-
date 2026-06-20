@@ -24,27 +24,58 @@ function removeAds() {
     '.promo',
     '.promotion',
     'aside [id*="ad"]',
-    'div[id*="gpt"]'
+    'div[id*="gpt"]',
+    '[id*="google_ads"]',
+    'ins.adsbygoogle',
+    '.google-auto-placed'
   ];
+
+  let removedCount = 0;
 
   adSelectors.forEach(selector => {
     try {
       const elements = document.querySelectorAll(selector);
       elements.forEach(element => {
+        // 부모 요소의 높이를 0으로 설정하여 레이아웃 충돌 최소화
         element.style.display = 'none';
+        element.style.visibility = 'hidden';
+        element.style.height = '0';
+        element.style.width = '0';
+        removedCount++;
       });
     } catch (e) {
       // 잘못된 선택자는 무시
     }
   });
 
-  // Google AdSense 광고 제거
-  const scripts = document.querySelectorAll('script[src*="pagead"]');
-  scripts.forEach(script => script.remove());
+  // Google AdSense 광고 스크립트 제거
+  try {
+    const scripts = document.querySelectorAll('script[src*="pagead"]');
+    scripts.forEach(script => {
+      script.remove();
+      removedCount++;
+    });
+  } catch (e) {}
 
   // 추적 스크립트 제거
-  const trackers = document.querySelectorAll('script[src*="analytics"]');
-  trackers.forEach(tracker => tracker.remove());
+  try {
+    const trackers = document.querySelectorAll('script[src*="analytics"]');
+    trackers.forEach(tracker => {
+      tracker.remove();
+      removedCount++;
+    });
+  } catch (e) {}
+
+  // Google Analytics 제거
+  try {
+    const gaScripts = document.querySelectorAll('script[src*="google-analytics"]');
+    gaScripts.forEach(script => {
+      script.remove();
+      removedCount++;
+    });
+  } catch (e) {}
+
+  console.log(`[Ad Blocker] Removed ${removedCount} ad elements`);
 }
 
 // 초기 로드 시 광고 제거
@@ -59,11 +90,11 @@ const observer = new MutationObserver(() => {
   removeAds();
 });
 
-observer.observe(document.body, {
+observer.observe(document.documentElement, {
   childList: true,
   subtree: true,
   attributes: true,
-  attributeFilter: ['id', 'class', 'src']
+  attributeFilter: ['id', 'class', 'src', 'data-ad-client']
 });
 
 // 확장프로그램 활성화 상태 확인
@@ -73,3 +104,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ success: true });
   }
 });
+
+// 광고 이미지 차단 (onload 이벤트에서 차단)
+document.addEventListener('load', function(event) {
+  const target = event.target;
+  if (target.tagName === 'IMG' || target.tagName === 'IFRAME') {
+    const src = target.src || target.getAttribute('src') || '';
+    if (src.includes('ads') || src.includes('google') || src.includes('doubleclick')) {
+      target.style.display = 'none';
+      target.style.visibility = 'hidden';
+      console.log('[Ad Blocker] Blocked image/iframe:', src);
+    }
+  }
+}, true);
