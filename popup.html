@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ad Blocker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🛡️ Ad Blocker</h1>
+      <p class="subtitle">광고 차단 확장프로그램</p>
+    </div>
+
+    <div class="status-section">
+      <div class="status-item">
+        <span class="status-label">상태:</span>
+        <span id="status" class="status-badge enabled">활성화</span>
+      </div>
+      <button id="toggleBtn" class="toggle-btn enabled">비활성화</button>
+    </div>
+
+    <div class="stats-section">
+      <h3>정보</h3>
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-icon">✓</span>
+          <span>네트워크 요청 차단</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">✓</span>
+          <span>DOM 광고 제거</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">✓</span>
+          <span>추적 방지</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3>필터 목록</h3>
+      <ul class="filter-list">
+        <li>Google Ads</li>
+        <li>Facebook Ads</li>
+        <li>DoubleClick</li>
+        <li>일반 광고 도메인</li>
+        <li>추적 스크립트</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>버전 1.0.0</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
