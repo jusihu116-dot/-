@@ -103,7 +103,4 @@ const adSelectors = [
 - [ ] 화이트리스트 기능
 - [ ] 필터 업데이트 자동화
 
-## 라이선스
-
-MIT License
 
