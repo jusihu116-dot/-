@@ -47,13 +47,13 @@ ad-blocker/
 ├── popup.css          # 팝업 스타일
 ├── popup.js           # 팝업 로직
 ├── README.md          # 이 파일
-└── images/            # 아이콘 이미지 (향후 추가)
+└── images/            # 아이콘 이미지
 ```
 
 ## 작동 원리
 
 ### 1. 네트워크 차단
-- `background.js`의 `webRequest` API를 사용하여 광고 도메인으로의 요청을 차단합니다.
+- `background.js`에서 광고 도메인으로의 요청을 차단합니다.
 
 ### 2. DOM 제거
 - `content.js`는 페이지 로드 후 광고 선택자를 이용해 DOM에서 광고 요소를 제거합니다.
@@ -110,4 +110,3 @@ MIT License
 ## 지원
 
 문제가 발생하면 GitHub Issues에 보고해주세요.
-
