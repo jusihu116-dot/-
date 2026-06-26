@@ -49,7 +49,21 @@
         <li>추적 스크립트</li>
       </ul>
     </div>
-
+// 이런 식으로 AST 노드를 방문하여 로직을 작성합니다
+module.exports = {
+  create(context) {
+    return {
+      CallExpression(node) {
+        if (node.callee.name === 'eval') {
+          context.report({
+            node,
+            message: '보안상 위험한 eval() 함수가 감지되었습니다.'
+          });
+        }
+      }
+    };
+  }
+};
     <div class="footer">
       <p>버전 1.0.0</p>
     </div>
