@@ -1,26 +1,43 @@
-// 페이지 내의 모든 <script> 태그 내용을 가져오는 예시
-function getPageCode() {
-  const scripts = Array.from(document.getElementsByTagName('script'));
-  let code = "";
-  scripts.forEach(s => {
-    if (s.src) {
-      // 외부 파일은 fetch를 통해 가져와야 함 (권한 필요)
-    } else {
-      code += s.textContent + "\n";
+// content.js
+
+/**
+ * 페이지 내 보안 취약 요소 탐지
+ */
+function scanPageSecurity() {
+    console.log("--- 보안 스캔 시작 ---");
+
+    // 1. 보안되지 않은 패스워드 입력 필드 탐지
+    const passwordFields = document.querySelectorAll('input[type="password"]');
+    passwordFields.forEach(field => {
+        if (window.location.protocol !== 'https:') {
+            console.warn("⚠️ [보안 경고]: HTTPS가 아닌 페이지에서 패스워드 입력창 발견됨!");
+        }
+    });
+
+    // 2. HTML 주석 내 민감 정보 탐지 (API Key, Todo 등)
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_COMMENT, null, false);
+    let comment;
+    while (comment = walker.nextNode()) {
+        const content = comment.nodeValue;
+        if (/api_key|password|secret|token/i.test(content)) {
+            console.error("🚨 [보안 경고]: 주석 내 민감 정보 노출 가능성 확인:", content.trim());
+        }
     }
-  });
-  return code;
+
+    // 3. 외부 스크립트(CDN) 소스 점검 (간단 예시)
+    const scripts = document.querySelectorAll('script[src]');
+    scripts.forEach(script => {
+        if (script.src.includes('http://') && !script.src.includes('localhost')) {
+            console.warn("⚠️ [보안 경고]: 신뢰할 수 없는 평문(HTTP) 스크립트 로드 중:", script.src);
+        }
+    });
+
+    console.log("--- 보안 스캔 종료 ---");
 }
 
-// 팝업에서 메시지를 보내면 코드 분석 시작
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "START_SCAN") {
-    const code = getPageCode();
-    // 여기서 코드 분석 로직 실행
-    console.log("분석 대상 코드:", code);
-    sendResponse({ status: "done", message: "분석 완료" });
-  }
-});
+// 페이지가 완전히 로드된 후 실행
+window.addEventListener('load', scanPageSecurity);
+---------------------------------------------------------------------
 // 페이지의 광고 요소를 DOM에서 제거
 function removeAds() {
   // 일반적인 광고 선택자
