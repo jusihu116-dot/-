@@ -1,3 +1,26 @@
+// 페이지 내의 모든 <script> 태그 내용을 가져오는 예시
+function getPageCode() {
+  const scripts = Array.from(document.getElementsByTagName('script'));
+  let code = "";
+  scripts.forEach(s => {
+    if (s.src) {
+      // 외부 파일은 fetch를 통해 가져와야 함 (권한 필요)
+    } else {
+      code += s.textContent + "\n";
+    }
+  });
+  return code;
+}
+
+// 팝업에서 메시지를 보내면 코드 분석 시작
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "START_SCAN") {
+    const code = getPageCode();
+    // 여기서 코드 분석 로직 실행
+    console.log("분석 대상 코드:", code);
+    sendResponse({ status: "done", message: "분석 완료" });
+  }
+});
 // 페이지의 광고 요소를 DOM에서 제거
 function removeAds() {
   // 일반적인 광고 선택자
